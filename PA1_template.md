@@ -1,13 +1,9 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 raw_data <- read.csv("../../peer1/activity.csv", header = TRUE, sep = ",")
 aggregate_data <- aggregate(steps ~ date, raw_data, as.vector, na.action = na.pass)
 aggregate_data[, "total_daily"] <- 0
@@ -17,17 +13,20 @@ for (i in 1:nrow(aggregate_data)) {
 ```
 ## What is mean total number of steps taken per day?
 
-```{r}
-hist(aggregate_data$total_daily, xlab = "Total Daily Steps", main = "Histogram of total daily steps")
 
+```r
+hist(aggregate_data$total_daily, xlab = "Total Daily Steps", main = "Histogram of total daily steps")
 ```
 
-Mean daily steps: `r format(mean(aggregate_data$total_daily, na.rm = TRUE), digits = 2)`
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+Mean daily steps: 10766
 <br>
-Median daily steps: `r format(median(aggregate_data$total_daily, na.rm = TRUE), digits = 2)`
+Median daily steps: 10765
 
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 aggregate_data2 <- aggregate(steps ~ interval, raw_data, as.vector, na.action = na.pass)
 
 aggregate_data2[, "average_by_interval"] <- 0
@@ -36,21 +35,22 @@ for (i in 1:nrow(aggregate_data2)) {
 }
 
 plot(aggregate_data2$interval, aggregate_data2$average_by_interval, ylim = c(0, 250), type = "l", main = "Average steps by interval", xlab = "Interval", ylab = "Average steps")
-
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 <br>
-On average, maximum number of steps are taken in interval: `r aggregate_data2[aggregate_data2$average_by_interval == max(aggregate_data2$average_by_interval), ]$interval`
+On average, maximum number of steps are taken in interval: 835
 <br>
 
 ## Imputing missing values
 
-Total rows with missing values : `r nrow(raw_data[is.na(raw_data$steps),])`
+Total rows with missing values : 2304
 <br>
 Missing values are replaced with the mean for the interval.
 <br>
 
-``` {r}
+
+```r
 clean_data <- raw_data
 for (i in 1:nrow(clean_data)) {
   if (is.na(raw_data[i, ]$steps)) {
@@ -67,12 +67,13 @@ for (i in 1:nrow(aggregate_data3)) {
 
 
 hist(aggregate_data3$total_daily, xlab = "Total Daily Steps", main = "Histogram of total daily steps")
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 <br>
-New mean daily steps: `r format(mean(aggregate_data3$total_daily), digits = 2)`
+New mean daily steps: 10766
 <br>
-New median daily steps: `r format(median(aggregate_data3$total_daily), digits = 2)`
+New median daily steps: 10766
 
 
 
@@ -82,8 +83,8 @@ New median daily steps: `r format(median(aggregate_data3$total_daily), digits = 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 
-``` {r message = FALSE, warning=FALSE, fig.height = 12, fig.width = 12}
 
+```r
 clean_data$day_type <- ""
 levels(clean_data$day_type) <- c("Weekday", "Weekend")
 
@@ -124,9 +125,8 @@ plot(aggregate_data4[aggregate_data4$day_type == "Weekday",]$interval, aggregate
 
 mtext("Interval", side = 1, outer = TRUE)
 mtext("Number of steps", side = 2, outer = TRUE)
-
-
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
 
